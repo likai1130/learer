@@ -1,0 +1,12 @@
+StatusAccepted		 = "Accepted"
+
+InvalidParams        = "Bad Request"
+StatusUnauthorized	 = "Non-Authoritative Information"
+StatusForbidden		 = "Forbidden"
+StatusNotFound		 = "Method Not Allowed"
+StatusConflict		 = "Conflict"
+
+InternalError        = "Internal Server Error"
+StatusBadGateway	 = "Bad Gateway"
+StatusServiceUnavailable = "Service Unavailable"
+StatusGatewayTimeout = "Gateway Timeout"
