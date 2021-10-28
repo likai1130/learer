@@ -22,10 +22,10 @@ import (
  * }
  */
 
-type ListNode struct {
-	     Val int
-	     Next *ListNode
-}
+//type ListNode struct {
+//	     Val int
+//	     Next *ListNode
+//}
 
 func deleteNode(node *ListNode,) {
 	node.Val = node.Next.Val;
