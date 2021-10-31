@@ -6,6 +6,8 @@ import (
 )
 
 /**
+反转链表
+
 给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
 
 */
@@ -14,6 +16,9 @@ type ListNode struct {
 	Next *ListNode
 }
 
+/**
+	递归
+ */
 func reverseList(head *ListNode) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
@@ -22,8 +27,6 @@ func reverseList(head *ListNode) *ListNode {
 	head.Next.Next = head
 	head.Next = nil
 	return newHead
-
-
 }
 
 func main() {
