@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"learner/leetcode/primary/tree_04/common"
+)
 
 /**
 给定一个二叉树，找出其最大深度。
@@ -21,13 +24,7 @@ import "fmt"
  */
 
 
-type TreeNode struct {
-	 Val int
-	 Left *TreeNode
-	 Right *TreeNode
-}
-
-func maxDepth(root *TreeNode) int {
+func maxDepth(root *common.TreeNode) int {
 	var lh,rh int
 	if root == nil {
 		return 0
@@ -42,12 +39,12 @@ func maxDepth(root *TreeNode) int {
 
 }
 func main() {
-	left1 := &TreeNode{15,nil,nil}
-	right1 := &TreeNode{7,nil,nil}
-	left := &TreeNode{9,nil,nil}
-	right := &TreeNode{20,left1,right1}
+	left1 := &common.TreeNode{15,nil,nil}
+	right1 := &common.TreeNode{7,nil,nil}
+	left := &common.TreeNode{9,nil,nil}
+	right := &common.TreeNode{20,left1,right1}
 
-	root := TreeNode{3,left,right}
+	root := common.TreeNode{3,left,right}
 
 	depth := maxDepth(&root)
 	fmt.Println(depth)
