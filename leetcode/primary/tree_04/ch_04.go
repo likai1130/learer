@@ -1,6 +1,8 @@
 package main
 
-import "learner/leetcode/primary/tree_04/common"
+import (
+	"learner/leetcode/primary/tree_04/common"
+)
 
 /**
 二叉树的层序遍历
