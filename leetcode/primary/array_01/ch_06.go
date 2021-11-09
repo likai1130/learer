@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 /**
 两个数组的交集 II
 给定两个数组，编写一个函数来计算它们的交集。
@@ -22,10 +24,24 @@ package main
  */
 
 func intersect(nums1 []int, nums2 []int) []int {
-	return nil
+	//排序
+	sort.Ints(nums1)
+	sort.Ints(nums2)
+	i,j := 0,0
+	ret := []int{}
+
+	for i< len(nums1) && j < len(nums2){
+		if nums1[i] == nums2[j] {
+			ret = append(ret, nums1[i])
+			i ++
+			j ++
+		}else if nums1[i] < nums2[j] {
+			i ++
+		}else {
+			j ++
+		}
+
+	}
+	return ret
 }
 
-func main() {
-
-
-}
