@@ -2,11 +2,15 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"math"
+	"math/rand"
 	"net"
+	"strconv"
+	"sync"
 	"time"
 )
 
@@ -15,10 +19,11 @@ const (
 	SERVER_ADDRESS = "127.0.0.1:8085"
 	DELIMITER      = '\t'
 )
+var wg sync.WaitGroup
 
 func serverGo() {
 	var listener net.Listener
-	listener, err := net.Listen(SERVER_ADDRESS, SERVER_ADDRESS)
+	listener, err := net.Listen(SERVER_NETWORK, SERVER_ADDRESS)
 	if err != nil {
 		log.Printf("Listen Error :%s\n", err.Error())
 		return
@@ -32,7 +37,7 @@ func serverGo() {
 		if err != nil {
 			log.Printf("Accept Error: %s \n",err.Error())
 		}
-		log.Printf("Established a connection with a client application. (remote address: %s)\n")
+		log.Printf("Established a connection with a client application. (remote address: %s)\n", conn.RemoteAddr())
 		go handleconn(conn)
 	}
 }
@@ -41,6 +46,10 @@ func serverGo() {
 	处理连接
  */
 func handleconn(conn net.Conn) {
+	defer func() {
+		conn.Close()
+		wg.Done()
+	}()
 	for  {
 		conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 		strReq,err := read(conn)
@@ -94,8 +103,17 @@ func write(conn net.Conn, content string) (int,  error) {
 /**
 	校验是不是int32
  */
-func converToInt32(s string)(int32, error) {
-	return 0,nil
+func converToInt32(str string)(int32, error) {
+	num, err := strconv.Atoi(str)
+	if err != nil {
+		log.Printf("Parse Error: %s\n",err.Error())
+		return 0, errors.New(fmt.Sprintf("'%s' is not integer!", str))
+	}
+	if num > math.MaxInt32 || num < math.MinInt32 {
+		log.Printf(fmt.Sprintf("Convert Error: The integer %s is too large/small.\n", num))
+		return 0, errors.New(fmt.Sprintf("'%s' is not 32-bit integer!", num))
+	}
+	return int32(num), nil
 }
 
 /**
@@ -118,9 +136,49 @@ func read(conn net.Conn) (string, error) {
 	return buffer.String(), nil
 }
 
-func clientGo() {
+/**
+	客户端
+ */
+func clientGo(id int) {
+	defer wg.Done()
+	conn, err := net.DialTimeout(SERVER_NETWORK, SERVER_ADDRESS, 2*time.Second)
+	if err != nil {
+		log.Printf("Dial Error: %s (Client[%d])\n",err, id)
+		return
+	}
+	defer conn.Close()
+	log.Printf("Connected to server. (remote address: %s, local address: %s) (Client[%d])\n",conn.RemoteAddr(), conn.LocalAddr(), id)
+	time.Sleep(200 * time.Millisecond)
+	requestNum := 5
+	conn.SetDeadline(time.Now().Add(5 * time.Millisecond))
+	for i := 0; i < requestNum; i++ {
+		i32Req := rand.Int31()
+		n ,err := write(conn,fmt.Sprintf("%d", i32Req))
+		if err != nil {
+			log.Printf("Write Error: %s (Client[%d])\n",err, id)
+			continue
+		}
+		log.Printf("Sent request (written %d bytes): %d (Client[%d])\n",n,i32Req,id)
+	}
+	for i := 0; i < requestNum; i++ {
+		strResp, err := read(conn)
+		if err != nil {
+			if err == io.EOF {
+				log.Printf("The connection is closed by another side. (Client[%d])\n", id)
+			}else {
+				log.Printf("Read Error: %s (Client[%d])\n", err, id)
+			}
+			break
+		}
+		log.Printf("Received response: %s (Client[%d])\n", strResp, id)
+	}
 
 }
-func main() {
 
+func main() {
+	wg.Add(2)
+	go serverGo()
+	time.Sleep(500 * time.Millisecond)
+	go clientGo(1)
+	wg.Wait()
 }
