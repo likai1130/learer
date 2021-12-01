@@ -1,0 +1,6 @@
+mongodb:
+  hosts: ["127.0.0.1:27017"]
+  maxPoolSize: 100
+  userName: mongoadmin
+  password: secret
+
