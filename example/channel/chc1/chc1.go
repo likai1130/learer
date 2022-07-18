@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -33,6 +35,9 @@ func main() {
 	}
 	wg.Wait()
 
-
+	ticker := time.NewTicker(3 * time.Second)
+	defer ticker.Stop()
+	fmt.Println(<- ticker.C)
+	context.Background().Done()
 }
 
