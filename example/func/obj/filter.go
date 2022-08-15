@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 )
 
 /**
@@ -67,3 +68,10 @@ func main() {
 		WithTokenId("123432"))
 	fmt.Println(filter.filter)
 }
+
+type ReadWriter interface {
+
+	io.Reader
+	io.Writer
+}
+
