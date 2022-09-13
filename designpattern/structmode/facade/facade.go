@@ -1,6 +1,5 @@
 package facade
 
-
 import "fmt"
 
 
@@ -54,7 +53,7 @@ func NewBModuleAPI() BModuleAPI {
 	return &bModuleImpl{}
 }
 
-//BModuleAPI ...
+//BModuleAPI
 type BModuleAPI interface {
 	TestB() string
 }

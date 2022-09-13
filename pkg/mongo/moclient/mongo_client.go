@@ -39,16 +39,15 @@ func setUp() *mongo.Client{
 	if mConf.UserName != "" && mConf.Password != "" {
 		clientOptions.SetAuth(options.Credential{Username: mConf.UserName, Password: mConf.Password})
 	}
-
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatal("MongoDB connect fail：%s",err.Error())
+		log.Fatalf("MongoDB connect fail：%s",err.Error())
 		os.Exit(1)
 	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Fatal("MongoDB ping fail：%s",err.Error())
+		log.Fatalf("MongoDB ping fail：%s",err.Error())
 		os.Exit(1)
 	}
 	log.Println("MongoDB connect success !")

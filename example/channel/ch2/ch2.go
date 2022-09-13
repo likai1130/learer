@@ -19,7 +19,6 @@ type signal struct {}
 func spawnGroup(f func(i int),num int,groupSignal <-chan signal) <- chan signal{
 	c := make(chan  signal)
 	var wg sync.WaitGroup
-
 	for i := 1; i <= num; i++ {
 		wg.Add(1)
 		go func(i int) {

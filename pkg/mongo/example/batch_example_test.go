@@ -3,8 +3,11 @@ package example
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"learner/pkg/mongo/constants"
 	"learner/pkg/mongo/moclient"
 	"learner/pkg/mongo/moconfig"
@@ -14,7 +17,7 @@ import (
 	"testing"
 )
 
-func TestBatchInstert(t *testing.T) {
+func TestBatchInsert(t *testing.T) {
 	moconfig.InitConfig("/Users/likai/hisun/gospace/src/learner/pkg/mongo/application.yaml")
 	wg := sync.WaitGroup{}
 	for i:=0;i<1000;i++ {
@@ -78,4 +81,18 @@ func get(name string) {
 	}
 	marshal, _ := json.Marshal(userData)
 	log.Printf("Find one user is success!\n %s",string(marshal))
+}
+
+func TestSub(t *testing.T)  {
+	moconfig.InitConfig("/Users/likai/hisun/gospace/src/learner/pkg/mongo/application.yaml")
+	cli := moclient.NewMongoCliInstance().MongoCli
+	collection := cli.Database(constants.MONGODB_DATABASE).Collection(constants.MONGODB_DATABASE_COLLECT)
+	changeStream, err := collection.Watch(context.Background(), mongo.Pipeline{},options.ChangeStream().SetFullDocument(options.UpdateLookup))
+	if err != nil {
+		panic(err)
+	}
+
+	for changeStream.Next(context.TODO()) {
+		fmt.Println(changeStream.Current)
+	}
 }

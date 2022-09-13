@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var expect = "A module running\nB module running"
+var expect = "A module running \nB module running"
 
 // TestFacadeAPI ...
 func TestFacadeAPI(t *testing.T) {
