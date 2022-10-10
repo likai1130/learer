@@ -5,11 +5,22 @@ import (
 	"os"
 )
 
+type xxx struct {
+	Name string
+}
+
+func ( x xxx)ff()  {
+	fmt.Println(x.Name)
+}
 /**
 	数组
  */
 func main() {
-	InssertSeqlist()
+	//InssertSeqlist()
+	//TArray()
+	//aa()
+	var aa xxx
+	aa.ff()
 }
 
 /**
@@ -34,4 +45,29 @@ func InssertSeqlist() {
 	}
 	list[i-1] = data
 	fmt.Println(list)
+}
+
+func TArray() {
+	/* 创建切片 */
+	numbers := []int{0,1,2,3,4,5,6,7,8}
+	printSlice(numbers)
+	number2 := numbers[:2]
+	printSlice(number2)
+	number3 := numbers[2:5]
+	printSlice(number3)
+}
+func printSlice(x []int){ fmt.Printf("len=%d cap=%d slice=%v\n",len(x),cap(x),x)}
+
+func aa() {
+	for i := 3; i < 100; i++ {
+		var j = 2
+		for j = 2; j < i; j++ {
+			if i%j == 0 {
+				break
+			}
+		}
+		if i == j {
+			fmt.Print(i, " ")
+		}
+	}
 }
