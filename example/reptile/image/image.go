@@ -73,25 +73,21 @@ func spider(i int, dir_path string) {
 
 	defer workResultLock.Done()
 
-	url := fmt.Sprintf("http://www.xiaohuar.com/list-1-%d.html", i)
+	//url := fmt.Sprintf("http://www.xiaohuar.com/list-1-%d.html", i)
 
-	response, err2 := http.Get(url)
+	url := fmt.Sprintf("http://www.doczj.com/doc/539181928-%d.html", i)
 
-	check(err2)
-
-	content, err3 := ioutil.ReadAll(response.Body)
-
-	check(err3)
-
-	defer response.Body.Close()
+	content, err := HttpGet(url)
+	check(err)
 
 	html := string(content)
 
 	html = ConvertToString(html, "gbk", "utf-8")
 
-	// fmt.Println(html)
+	 fmt.Println(html)
 
-	match := regexp.MustCompile(`<img width="210".*alt="(.*?)".*src="(.*?)" />`)
+	//match := regexp.MustCompile(`<img width="210".*alt="(.*?)".*src="(.*?)" />`)
+	match := regexp.MustCompile(`<img .*alt="(.*?)".*src="(.*?)" />`)
 
 	matched_str := match.FindAllString(html, -1)
 
@@ -125,19 +121,49 @@ func spider(i int, dir_path string) {
 
 }
 
+var httpCli = NewHttpClient()
+
+func NewHttpClient() *http.Client {
+
+	return &http.Client{}
+}
+
+func HttpGet(url string) ([]byte,error) {
+	request, err := http.NewRequest("GET", url, nil)
+
+	if err != nil {
+		return nil,nil
+	}
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("User-Agent", "PostmanRuntime/7.26.10")
+	request.Header.Add("USERNAME", "SANDBOX")
+
+	do, err := httpCli.Do(request)
+	if err != nil {
+		return nil, err
+	}
+	defer do.Body.Close()
+
+	data, err := ioutil.ReadAll(do.Body)
+	if err != nil {
+		return nil, err
+	}
+	return data,nil
+}
+
 func main() {
 
 	start := time.Now()
 
 	//dir := filepath.Dir(os.Args[0])
 
-	dir_path := filepath.Join("./", "images")
+	dir_path := filepath.Join("./", "xxx")
 
 	err1 := os.MkdirAll(dir_path, os.ModePerm)
 
 	check(err1)
 
-	for i := 0; i < 4; i++ {
+	for i := 1; i <= 4; i++ {
 
 		workResultLock.Add(1)
 
