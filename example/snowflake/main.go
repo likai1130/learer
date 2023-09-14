@@ -107,7 +107,7 @@ func (sf *Snowflake) Generate() (int64, error) {
 
 func main() {
 	// 初始化Snowflake算法
-	sf := NewSnowflake(1546272000000, 10, 10, 12)
+	sf := NewSnowflake(time.Now().UnixNano(), 1, 1, 1)
 
 	// 设置机器id和数据中心id
 	sf.SetWorkerId(1)

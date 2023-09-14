@@ -10,19 +10,21 @@ require (
 	github.com/flyleft/gprofile v0.0.0-20190121091042-4c613f874133
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis v6.15.9+incompatible
-	github.com/gogf/gf/v2 v2.3.2
 	github.com/gorilla/websocket v1.5.0
 	github.com/nicksnyder/go-i18n/v2 v2.1.2
 	github.com/phachon/go-logger v0.0.0-20191215032019-86e4227f71ea
 	github.com/pkg/errors v0.9.1
 	github.com/satori/go.uuid v1.2.0
 	go.mongodb.org/mongo-driver v1.8.0
-	golang.org/x/text v0.3.8-0.20211105212822-18b340fc7af2
+	golang.org/x/text v0.6.0
+	google.golang.org/grpc v1.53.0
+	google.golang.org/protobuf v1.28.1
 )
 
 require (
 	github.com/andybalholm/cascadia v1.2.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
+	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -30,6 +32,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
@@ -48,12 +51,10 @@ require (
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	go.opentelemetry.io/otel v1.7.0 // indirect
-	go.opentelemetry.io/otel/trace v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
-	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
+	golang.org/x/net v0.5.0 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
+	golang.org/x/sys v0.4.0 // indirect
+	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

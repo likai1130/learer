@@ -1,12 +1,11 @@
 package dgstseed
 
 import (
-	"bfs-pnode-api/entity"
-	"bfs-pnode-api/utils"
 	"crypto/md5"
 	"crypto/sha1"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"strconv"
 )
@@ -18,7 +17,7 @@ func GetAfidLocal(path string) (rawAfid string, err error) {
 	}
 	defer f.Close()
 	verisonCode := fmt.Sprintf("%s00", "1e")
-	fileLength := utils.GetFileSize(path)
+	fileLength := GetFileSize(path)
 	fileLengthHex := fmt.Sprintf("%0*s", 12, fmt.Sprintf("%x", fileLength))
 	h := sha1.New()
 	io.Copy(h, f)
@@ -35,14 +34,14 @@ func GetAfidLocal(path string) (rawAfid string, err error) {
 	str88Sha := fmt.Sprintf("%x", h2.Sum(nil))
 
 	afid := str88 + str88Sha
-	utils.DevLog("GetAfidLocal","本地计算afid：" + afid)
+	log.Println("GetAfidLocal", "本地计算afid："+afid)
 	return afid, nil
 }
 
 /**
  * 从afid 中解析出基本的dgst 数值
  */
-func ConvertAfig2Dgst(afid string) entity.AfsSimpleDgst {
+func ConvertAfig2Dgst(afid string) AfsSimpleDgst {
 	//utils.LogDebug("ConvertAfig2Dgst",fmt.Sprintf("afid.len=%d \n", len(afid)))
 
 	prefix := afid[0:4]
@@ -63,15 +62,41 @@ func ConvertAfig2Dgst(afid string) entity.AfsSimpleDgst {
 	afidMini := prefix + suffix[20:]
 	//afid_lite是前16位加最後40位，共56字节
 	afidLite := prefix + fileLengthHex + suffix
-	dgst := entity.AfsSimpleDgst{Afid: afid, AfidLite: afidLite, AfidMini: afidMini, Md5: md5, Sha1: sha1, FileLengthHex: fileLengthHex}
+	dgst := AfsSimpleDgst{Afid: afid, AfidLite: afidLite, AfidMini: afidMini, Md5: md5, Sha1: sha1, FileLengthHex: fileLengthHex}
 
 	size, err := strconv.ParseUint(fileLengthHex, 16, 64)
 
 	if err != nil {
-		utils.LogError("get file size fail ... ")
+		log.Println("get file size fail ... ")
 	} else {
 		dgst.FileSize = size
 	}
 
 	return dgst
+}
+
+type AfsSimpleDgst struct {
+	Afid          string
+	AfidMini      string
+	FileLengthHex string
+	FileSize      uint64
+	AfidLite      string
+	Md5           string
+	Sha1          string
+}
+
+func GetFileSize(path string) int64 {
+	if !exists(path) {
+		return 0
+	}
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return 0
+	}
+	return fileInfo.Size()
+}
+
+func exists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil || os.IsExist(err)
 }
