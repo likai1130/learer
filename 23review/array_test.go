@@ -89,3 +89,50 @@ func TestMap(t *testing.T) {
 
 	fmt.Println(len(m))
 }
+
+func TestNewSlice(t *testing.T) {
+	// 零切片
+	slice2 := make([]int, 5)  // 0 0 0 0 0
+	slice2[0] = 1             //[1 0 0 0 0]
+	slice3 := make([]*int, 5) // nil nil nil nil nil
+	a := 1
+	slice3[0] = &a //[0xc00009c1f8 <nil> <nil> <nil> <nil>]
+
+	//nil切片
+	var slice4 []int //[]
+	//slice4[0] = 1            //panic: runtime error: index out of range [0] with length 0
+	var slice5 = *new([]int) //[]
+	//	slice5[0] = 1            //panic: runtime error: index out of range [0] with length 0
+
+	//空切片
+	var slice6 = []int{}
+	//	slice6[0] = 1 //panic: runtime error: index out of range [0] with length 0
+	var slice7 = make([]int, 0)
+	//	slice7[0] = 1 //panic: runtime error: index out of range [0] with length 0
+
+	fmt.Println(slice2)
+	fmt.Println(slice3)
+	fmt.Println(slice4)
+	fmt.Println(slice5)
+	fmt.Println(slice6)
+	fmt.Println(slice7)
+}
+
+type user struct {
+	name string
+	age  uint64
+}
+
+func TestRangeSlice(t *testing.T) {
+	u := []user{
+		{"asong", 23},
+		{"song", 19},
+		{"asong2020", 18},
+	}
+	for i, _ := range u {
+		if u[i].age != 18 {
+			u[i].age = 20
+		}
+	}
+	fmt.Println(u)
+}
