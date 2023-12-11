@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/sashabaranov/go-openai"
+	"log"
 	"testing"
 )
 
@@ -25,6 +26,89 @@ func init() {
 	client = openai.NewClient("")
 
 }
+
+/*
+*
+创建助手
+*/
+func CreateAssistants(ctx context.Context) (openai.Assistant, error) {
+	name := "数学导师"
+	instructions := "您是一名私人数学导师。编写并运行GO代码来回答数学问题。"
+	description := "数学导师无所不知"
+
+	// 1. 创建助手
+	return client.CreateAssistant(ctx, openai.AssistantRequest{
+		Model:        openai.GPT3Dot5Turbo1106,
+		Name:         &name,
+		Description:  &description,
+		Instructions: &instructions,
+	})
+}
+
+/*
+*
+查询助手
+
+params assistantsId 助手id
+*/
+func GetAssistants(ctx context.Context, assistantsId string) {
+	response, err := client.RetrieveAssistant(ctx, assistantsId)
+	if err != nil {
+		panic(err)
+	}
+	objToJson(response, "GetAssistants")
+}
+
+/*
+*
+列表
+*/
+func ListAssistants(ctx context.Context) {
+	response, err := client.ListAssistants(ctx, nil, nil, nil, nil)
+	if err != nil {
+		panic(err)
+	}
+	objToJson(response, "ListAssistants")
+}
+
+func DeleteAssistants(ctx context.Context, assistantsId string) {
+	response, err := client.DeleteAssistant(ctx, assistantsId)
+	if err != nil {
+		panic(err)
+	}
+	objToJson(response, "DeleteAssistants")
+}
+
+func objToJson(obj interface{}, funcName string) {
+	marshal, err := json.Marshal(obj)
+	if err != nil {
+		panic(err)
+	}
+	log.Println(fmt.Sprintf("%s result = %s", funcName, string(marshal)))
+}
+
+func TestCRUDAssistants(t *testing.T) {
+	ctx := context.Background()
+	// 创建
+	assistants, err := CreateAssistants(ctx)
+	if err != nil {
+		panic(err)
+	}
+	objToJson(assistants, "CreateAssistants")
+	// 查询
+	assistantId := assistants.ID
+	GetAssistants(ctx, assistantId)
+	//列表
+	ListAssistants(ctx)
+	//删除
+	DeleteAssistants(ctx, assistantId)
+}
+
+func TestAssistantsList(t *testing.T) {
+	ctx := context.Background()
+	ListAssistants(ctx)
+}
+
 func TestAssistants(t *testing.T) {
 	ctx := context.Background()
 	name := "数学导师"
